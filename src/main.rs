@@ -32,7 +32,7 @@ fn main() {
 
     // Start mining threads
 
-    let threads = Vec::with_capacity(config.threads as usize);
+    let mut threads = Vec::with_capacity(config.threads as usize);
     for thread_id in 0..config.threads {
         let config = config.clone();
         let thread = thread::spawn(move || {
@@ -42,6 +42,6 @@ fn main() {
     }
 
     for thread in threads {
-        thread.join();
+        thread.join().unwrap()
     }
 }
