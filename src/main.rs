@@ -1,14 +1,12 @@
 // Imports
 
 mod config;
+mod mine;
 
 use crate::config::Config;
 
 use std::{ env, process, thread };
 use std::sync::mpsc;
-
-use rand::thread_rng;
-use tiny_keccak::Sha3;
 
 // Run function selector miner
 
@@ -32,11 +30,5 @@ fn main() {
 
     // Start mining threads
 
-    mine_selector(config);
-}
-
-// Mine function selectors with zero byte target
-
-fn mine_selector(config: Config) {
-
+    mine::mine_selector(config);
 }
