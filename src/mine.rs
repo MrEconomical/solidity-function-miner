@@ -89,6 +89,5 @@ fn get_random(thread_id: u32, threads: u32) -> Vec<u8> {
     for b in 0..RANDOM_LENGTH {
         slice.push(97 + ((state / num_chars.pow(b as u32)) % num_chars) as u8);
     }
-    slice.reverse();
     slice
 }
