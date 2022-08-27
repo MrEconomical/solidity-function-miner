@@ -59,9 +59,9 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Confi
                 hash[0], hash[1], hash[2], hash[3]
             );
             if zero_bytes > config.target {
-                sender.send(format!("    {message}"));
+                sender.send(format!("    {message}")).unwrap();
             } else {
-                sender.send(message);
+                sender.send(message).unwrap();
             }
         }
     }
