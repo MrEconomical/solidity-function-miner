@@ -21,7 +21,7 @@ impl Config {
 
         let params = match args.next() {
             Some(arg) => {
-                if !arg.starts_with("(") || !arg.ends_with(")") {
+                if !arg.starts_with('(') || !arg.ends_with(')') {
                     return Err("expected function parameters in format (type1,type2,...)");
                 } else if arg.contains(char::is_whitespace) {
                     return Err("function parameters must be in format (type1,type2,...) without spaces");

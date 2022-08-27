@@ -2,11 +2,39 @@
 
 use crate::config::Config;
 
-use rand::thread_rng;
+use std::ops::Range;
+
+use rand::Rng;
 use tiny_keccak::Sha3;
+
+// Mining parameters
+
+const RANDOM_LENGTH: usize = 12;
+const START_CHARS: Range<u8> = 97..107;
 
 // Mine function selectors with zero byte target
 
 pub fn mine_selector(config: Config) {
+    // Get function byte vector and fill random slots
 
+    let mut bytes = get_bytes(&config);
+    let mut rng = rand::thread_rng();
+    println!("{bytes:?}");
+    bytes[config.name.len() + 1..config.name.len() + RANDOM_LENGTH + 1].fill_with(|| rng.gen_range(START_CHARS));
+
+    println!("{bytes:?}");
+}
+
+// Convert function name and params to bytes
+
+fn get_bytes(config: &Config) -> Vec<u8> {
+    let name_len = config.name.len();
+    let bytes = name_len + RANDOM_LENGTH + 1 + config.params.len();
+    let mut bytes: Vec<u8> = vec![0; bytes];
+
+    bytes[..name_len].clone_from_slice(config.name.as_bytes());
+    bytes[name_len] = b'_';
+    bytes[name_len + RANDOM_LENGTH + 1..].clone_from_slice(config.params.as_bytes());
+
+    bytes
 }
