@@ -1,6 +1,6 @@
 // Imports
 
-use std::{ env, thread };
+use std::{ env, process, thread };
 use std::sync::mpsc;
 
 use rand::thread_rng;
@@ -77,6 +77,23 @@ impl Config {
     }
 }
 
+// Run function selector miner
+
 fn main() {
-    println!("Hello, world!");
+    // Get command line arguments
+
+    println!();
+    println!("Initializing solidity function miner...");
+    let config = Config::new(env::args()).unwrap_or_else(|error| {
+        eprintln!("Error parsing arguments: {error}\n");
+        eprintln!("cargo run");
+        eprintln!("    <function name>         Name of Solidity function to mine selectors for");
+        eprintln!("    <function parameters>   Parameter list of function without spaces or abbreviations");
+        eprintln!("    <zero byte target>      Number of zero bytes to mine");
+        eprintln!("    <thread count>          Number of threads to mine on");
+        eprintln!("    --release               Run in release mode (optimized)");
+        eprintln!();
+        process::exit(1);
+    });
+    println!("Mining {}{} for {} target zero bytes with {} threads", config.name, config.params, config.target, config.threads);
 }
