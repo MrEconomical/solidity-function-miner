@@ -38,12 +38,13 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Confi
 
         // Check function selector hash for zero bytes
 
-        let mut hash = [0u8; 32];
+        let mut hash = [0; 32];
         let mut hasher = Keccak::v256();
         hasher.update(&bytes);
         hasher.finalize(&mut hash);
 
-        let mut zero_bytes = 0u32;
+        let mut zero_bytes = 0;
+        #[allow(clippy::needless_range_loop)]
         for b in 0..4 {
             if hash[b] == 0 {
                 zero_bytes += 1;
