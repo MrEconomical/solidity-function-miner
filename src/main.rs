@@ -18,7 +18,7 @@ fn main() {
     println!("Note: running directly from executable is much faster than running via cargo run");
     let config = Config::new(env::args()).unwrap_or_else(|error| {
         eprintln!("Error parsing arguments: {error}\n");
-        eprintln!("{}", env::args().next().unwrap());
+        eprintln!("Usage for {}", env::args().next().unwrap());
         eprintln!("    <function name>         Name of Solidity function to mine selectors for");
         eprintln!("    <function parameters>   Parameter list of function without spaces or abbreviations");
         eprintln!("    <zero byte target>      Number of zero bytes to mine");
