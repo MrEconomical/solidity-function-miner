@@ -2,18 +2,15 @@
 
 use crate::config::Config;
 
-use std::ops::Range;
 use std::str;
 use std::sync::mpsc;
 
-use rand::Rng;
 use tiny_keccak::{ Hasher, Keccak };
 
 // Mining parameters
 
 const RANDOM_LENGTH: usize = 12;                                // Length of random characters in function name
 const CHAR_RANGE: (u8, u8) = (97, 122);                         // Range of random characters (a-z)
-const START_CHARS: Range<u8> = CHAR_RANGE.0..CHAR_RANGE.0 + 10; // Range of starting random characters
 
 // Mine function selectors with zero byte target
 
@@ -21,9 +18,8 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Confi
     // Get function byte vector and fill random slots
 
     let mut bytes = get_bytes(&config);
-    let mut rng = rand::thread_rng();
     let random_slice = (config.name.len() + 1, config.name.len() + RANDOM_LENGTH + 1);
-    bytes[random_slice.0..random_slice.1].fill_with(|| rng.gen_range(START_CHARS));
+    bytes[random_slice.0..random_slice.1].clone_from_slice(&get_random(thread_id, config.threads));
 
     loop {
         // Increment random slice
@@ -81,4 +77,10 @@ fn get_bytes(config: &Config) -> Vec<u8> {
     bytes[name_len + RANDOM_LENGTH + 1..].clone_from_slice(config.params.as_bytes());
 
     bytes
+}
+
+// Get random byte slice from thread number to divide load
+
+fn get_random(thread_id: u32, threads: u32) -> Vec<u8> {
+    vec![]
 }
