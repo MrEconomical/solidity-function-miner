@@ -17,7 +17,7 @@ fn main() {
     println!("Initializing solidity function miner...");
     let config = Config::new(env::args()).unwrap_or_else(|error| {
         eprintln!("Error parsing arguments: {error}\n");
-        eprintln!("solidity-function-miner");
+        eprintln!("{}", env::args().next().unwrap());
         eprintln!("    <function name>         Name of Solidity function to mine selectors for");
         eprintln!("    <function parameters>   Parameter list of function without spaces or abbreviations");
         eprintln!("    <zero byte target>      Number of zero bytes to mine");
