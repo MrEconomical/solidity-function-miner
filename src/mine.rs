@@ -20,7 +20,8 @@ pub fn mine_selector(config: Config) {
     let mut bytes = get_bytes(&config);
     let mut rng = rand::thread_rng();
     println!("{bytes:?}");
-    bytes[config.name.len() + 1..config.name.len() + RANDOM_LENGTH + 1].fill_with(|| rng.gen_range(START_CHARS));
+    let random_slice = (config.name.len() + 1, config.name.len() + RANDOM_LENGTH + 1);
+    bytes[random_slice.0..random_slice.1].fill_with(|| rng.gen_range(START_CHARS));
 
     println!("{bytes:?}");
 }
