@@ -22,7 +22,6 @@ fn main() {
         eprintln!("    <function parameters>   Parameter list of function without spaces or abbreviations");
         eprintln!("    <zero byte target>      Number of zero bytes to mine");
         eprintln!("    <thread count>          Number of threads to mine on");
-        eprintln!("    --release               Run in release mode (optimized)");
         eprintln!();
         process::exit(1);
     });
