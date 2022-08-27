@@ -26,7 +26,10 @@ fn main() {
         eprintln!();
         process::exit(1);
     });
-    println!("Mining {}{} for {} target zero bytes with {} threads", config.name, config.params, config.target, config.threads);
+    println!(
+        "Mining {}{} for {} target zero bytes with {} threads",
+        config.name, config.params, config.target, config.threads
+    );
 
     // Start mining threads
 

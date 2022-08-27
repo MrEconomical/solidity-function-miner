@@ -14,8 +14,7 @@ impl Config {
         // Get function name
 
         args.next();
-        let name = args.next()
-            .ok_or("no function name specified")?;
+        let name = args.next().ok_or("no function name specified")?;
         
         // Get function parameters
 
@@ -65,6 +64,11 @@ impl Config {
             None => return Err("no thread count specified")
         };
 
-        Ok(Config { name, params, target, threads })
+        Ok(Config {
+            name,
+            params,
+            target,
+            threads
+        })
     }
 }
