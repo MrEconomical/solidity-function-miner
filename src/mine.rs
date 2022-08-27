@@ -3,6 +3,7 @@
 use crate::config::Config;
 
 use std::ops::Range;
+use std::str;
 
 use rand::Rng;
 use tiny_keccak::{ Hasher, Keccak };
@@ -31,7 +32,7 @@ pub fn mine_selector(config: Config) {
                 bytes[b] += 1;
                 break;
             }
-            bytes[b] = 0;
+            bytes[b] = CHAR_RANGE.0;
         }
 
         // Check function selector hash for zero bytes
@@ -46,6 +47,17 @@ pub fn mine_selector(config: Config) {
             if hash[b] == 0 {
                 zero_bytes += 1;
             }
+        }
+
+        if zero_bytes >= config.target {
+            // Display targeted selector
+
+            let message = format!(
+                "{}: 0x{:>02x?}{:>02x?}{:>02x?}{:>02x?}",
+                str::from_utf8(&bytes).unwrap(),
+                hash[0], hash[1], hash[2], hash[3]
+            );
+            println!("{message}");
         }
     }
 }
