@@ -9,8 +9,8 @@ use tiny_keccak::{ Hasher, Keccak };
 
 // Mining parameters
 
-const RANDOM_LENGTH: usize = 12;                                // Length of random characters in function name
-const CHAR_RANGE: (u8, u8) = (97, 122);                         // Range of random characters (a-z)
+const RANDOM_LENGTH: usize = 12;        // Length of random characters in function name
+const CHAR_RANGE: (u8, u8) = (97, 122); // Range of random characters (a-z)
 
 // Mine function selectors with zero byte target
 
@@ -82,5 +82,5 @@ fn get_bytes(config: &Config) -> Vec<u8> {
 // Get random byte slice from thread number to divide load
 
 fn get_random(thread_id: u32, threads: u32) -> Vec<u8> {
-    vec![]
+
 }
