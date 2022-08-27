@@ -72,3 +72,16 @@ impl Config {
         })
     }
 }
+
+impl Clone for Config {
+    // Clone values into new owned values
+
+    fn clone(&self) -> Config {
+        Config {
+            name: String::from(&self.name),
+            params: String::from(&self.params),
+            target: self.target,
+            threads: self.threads
+        }
+    }
+}

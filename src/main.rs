@@ -33,5 +33,16 @@ fn main() {
 
     // Start mining threads
 
-    mine::mine_selector(config);
+    let (sender, receiver) = mpsc::channel();
+    for thread_id in 0..config.threads {
+        let sender = sender.clone();
+        let config = config.clone();
+        thread::spawn(move || {
+            mine::mine_selector(thread_id, sender, config);
+        });
+    }
+
+    for message in receiver {
+        println!("{message}");
+    }
 }
