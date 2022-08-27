@@ -23,7 +23,21 @@ pub fn mine_selector(config: Config) {
     let random_slice = (config.name.len() + 1, config.name.len() + RANDOM_LENGTH + 1);
     bytes[random_slice.0..random_slice.1].fill_with(|| rng.gen_range(START_CHARS));
 
-    println!("{bytes:?}");
+    // Hash function signature bytes in loop
+
+    loop {
+        // Increment random slice
+
+        for b in random_slice.0..random_slice.1 {
+            if bytes[b] < CHAR_RANGE.1 {
+                bytes[b] += 1;
+                break;
+            }
+            bytes[b] = 0;
+        }
+
+        println!("{bytes:?}");
+    }
 }
 
 // Convert function name and params to bytes
