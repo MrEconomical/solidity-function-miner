@@ -82,5 +82,13 @@ fn get_bytes(config: &Config) -> Vec<u8> {
 // Get random byte slice from thread number to divide load
 
 fn get_random(thread_id: u32, threads: u32) -> Vec<u8> {
+    let mut slice = Vec::with_capacity(RANDOM_LENGTH);
+    let num_chars = (CHAR_RANGE.1 - CHAR_RANGE.0 + 1) as u64;
+    let state = num_chars.pow(RANDOM_LENGTH as u32) * thread_id as u64 / threads as u64;
 
+    for b in 0..RANDOM_LENGTH {
+        slice.push(97 + ((state / num_chars.pow(b as u32)) % num_chars) as u8);
+    }
+    slice.reverse();
+    slice
 }
