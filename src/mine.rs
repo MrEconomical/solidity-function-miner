@@ -5,7 +5,7 @@ use crate::config::Config;
 use std::ops::Range;
 
 use rand::Rng;
-use tiny_keccak::Sha3;
+use tiny_keccak::Keccak;
 
 // Mining parameters
 
@@ -23,8 +23,6 @@ pub fn mine_selector(config: Config) {
     let random_slice = (config.name.len() + 1, config.name.len() + RANDOM_LENGTH + 1);
     bytes[random_slice.0..random_slice.1].fill_with(|| rng.gen_range(START_CHARS));
 
-    // Hash function signature bytes in loop
-
     loop {
         // Increment random slice
 
@@ -36,7 +34,9 @@ pub fn mine_selector(config: Config) {
             bytes[b] = 0;
         }
 
-        println!("{bytes:?}");
+        // Check function selector hash for zero bytes
+
+        let mut hash = [0; 32];
     }
 }
 
