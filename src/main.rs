@@ -15,7 +15,7 @@ fn main() {
 
     println!();
     println!("Initializing solidity function miner...");
-    println!("Note: running directly from executable is much faster than running via cargo run");
+    println!("Note: running directly from release executable is much faster than running via cargo run");
     let config = Config::new(env::args()).unwrap_or_else(|error| {
         eprintln!("Error parsing arguments: {error}");
         eprintln!("Usage for {}", env::args().next().unwrap());
