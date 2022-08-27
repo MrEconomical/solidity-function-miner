@@ -28,6 +28,7 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Confi
     loop {
         // Increment random slice
 
+        #[allow(clippy::needless_range_loop)]
         for b in random_slice.0..random_slice.1 {
             if bytes[b] < CHAR_RANGE.1 {
                 bytes[b] += 1;
