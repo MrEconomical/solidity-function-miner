@@ -4,7 +4,6 @@ use crate::config::Config;
 
 use std::ops::Range;
 use std::str;
-use std::sync::mpsc;
 
 use rand::Rng;
 use tiny_keccak::{ Hasher, Keccak };
@@ -17,7 +16,7 @@ const START_CHARS: Range<u8> = CHAR_RANGE.0..CHAR_RANGE.0 + 10; // Range of star
 
 // Mine function selectors with zero byte target
 
-pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Config) {
+pub fn mine_selector(thread_id: u32, config: Config) {
     // Get function byte vector and fill random slots
 
     let mut bytes = get_bytes(&config);
@@ -49,6 +48,13 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Confi
                 zero_bytes += 1;
             }
         }
+
+        let message = format!(
+            "[thread {thread_id}] {} = 0x{:>02x?}{:>02x?}{:>02x?}{:>02x?}",
+            str::from_utf8(&bytes).unwrap(),
+            hash[0], hash[1], hash[2], hash[3]
+        );
+        println!("{message}");
 
         if zero_bytes >= config.target {
             // Display targeted selector

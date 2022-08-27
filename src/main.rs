@@ -6,7 +6,6 @@ mod mine;
 use crate::config::Config;
 
 use std::{ env, process, thread };
-use std::sync::mpsc;
 
 // Run function selector miner
 
@@ -33,16 +32,16 @@ fn main() {
 
     // Start mining threads
 
-    let (sender, receiver) = mpsc::channel();
+    let threads = Vec::with_capacity(config.threads as usize);
     for thread_id in 0..config.threads {
-        let sender = sender.clone();
         let config = config.clone();
-        thread::spawn(move || {
-            mine::mine_selector(thread_id, sender, config);
+        let thread = thread::spawn(move || {
+            mine::mine_selector(thread_id, config);
         });
+        threads.push(thread);
     }
 
-    for message in receiver {
-        println!("{message}");
+    for thread in threads {
+        thread.join();
     }
 }
