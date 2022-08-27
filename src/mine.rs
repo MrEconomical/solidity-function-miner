@@ -5,7 +5,7 @@ use crate::config::Config;
 use std::ops::Range;
 
 use rand::Rng;
-use tiny_keccak::Keccak;
+use tiny_keccak::{ Hasher, Keccak };
 
 // Mining parameters
 
@@ -36,7 +36,17 @@ pub fn mine_selector(config: Config) {
 
         // Check function selector hash for zero bytes
 
-        let mut hash = [0; 32];
+        let mut hash = [0u8; 32];
+        let mut hasher = Keccak::v256();
+        hasher.update(&bytes);
+        hasher.finalize(&mut hash);
+
+        let mut zero_bytes = 0u32;
+        for b in 0..4 {
+            if hash[b] == 0 {
+                zero_bytes += 1;
+            }
+        }
     }
 }
 
