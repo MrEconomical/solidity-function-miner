@@ -9,8 +9,9 @@ use tiny_keccak::Sha3;
 
 // Mining parameters
 
-const RANDOM_LENGTH: usize = 12;
-const START_CHARS: Range<u8> = 97..107;
+const RANDOM_LENGTH: usize = 12;                                // Length of random characters in function name
+const CHAR_RANGE: (u8, u8) = (97, 122);                         // Range of random characters (a-z)
+const START_CHARS: Range<u8> = CHAR_RANGE.0..CHAR_RANGE.0 + 10; // Range of starting random characters
 
 // Mine function selectors with zero byte target
 
@@ -19,7 +20,6 @@ pub fn mine_selector(config: Config) {
 
     let mut bytes = get_bytes(&config);
     let mut rng = rand::thread_rng();
-    println!("{bytes:?}");
     let random_slice = (config.name.len() + 1, config.name.len() + RANDOM_LENGTH + 1);
     bytes[random_slice.0..random_slice.1].fill_with(|| rng.gen_range(START_CHARS));
 
