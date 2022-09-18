@@ -11,11 +11,10 @@ use tiny_keccak::{ Hasher, Keccak };
 // Mine function selectors with zero byte target and salt
 
 pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args, salt: [u8; SALT_LEN]) {
-    // Get function byte vector and fill random slots
+    // Get function byte vector with salt
 
     let mut bytes = get_bytes(&args, &salt);
-    let rand_start = args.name.len() + 1;
-    let random_slice = (rand_start + SALT_LEN, rand_start + SALT_LEN + RANDOM_LEN);
+    let random_slice = (args.name.len() + 1 + SALT_LEN, args.name.len() + 1 + SALT_LEN + RANDOM_LEN);
 
     loop {
         // Increment random slice
