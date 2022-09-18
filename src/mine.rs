@@ -13,8 +13,9 @@ use tiny_keccak::{ Hasher, Keccak };
 pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args, salt: [u8; SALT_LEN]) {
     // Get function byte vector and fill random slots
 
-    let mut bytes = get_bytes(&args);
-    let random_slice = (args.name.len() + 1, args.name.len() + RANDOM_LEN + 1);
+    let mut bytes = get_bytes(&args, &salt);
+    let rand_start = args.name.len() + 1;
+    let random_slice = (rand_start + SALT_LEN, rand_start + SALT_LEN + RANDOM_LEN);
     bytes[random_slice.0..random_slice.1].clone_from_slice(&get_random(thread_id, args.threads));
 
     loop {
@@ -61,16 +62,17 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args, s
     }
 }
 
-// Convert function name and params to byte vector
+// Convert function name and params with salt to byte vector
 
-fn get_bytes(args: &Args) -> Vec<u8> {
+fn get_bytes(args: &Args, salt: &[u8; SALT_LEN]) -> Vec<u8> {
     let name_len = args.name.len();
-    let bytes = name_len + RANDOM_LEN + 1 + args.params.len();
+    let bytes = name_len + 1 + SALT_LEN + RANDOM_LEN + args.params.len();
     let mut bytes: Vec<u8> = vec![0; bytes];
 
     bytes[..name_len].clone_from_slice(args.name.as_bytes());
     bytes[name_len] = b'_';
-    bytes[name_len + RANDOM_LEN + 1..].clone_from_slice(args.params.as_bytes());
+    bytes[name_len + 1..name_len + 1 + SALT_LEN].clone_from_slice(salt);
+    bytes[name_len + 1 + SALT_LEN + RANDOM_LEN..].clone_from_slice(args.params.as_bytes());
 
     bytes
 }
