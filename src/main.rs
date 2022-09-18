@@ -43,8 +43,9 @@ fn main() {
     for thread_id in 0..args.threads {
         let sender = sender.clone();
         let args = args.clone();
+        let salt = salts[thread_id as usize];
         thread::spawn(move || {
-            mine::mine_selector(thread_id, sender, args);
+            mine::mine_selector(thread_id, sender, args, salt);
         });
     }
 
@@ -53,7 +54,7 @@ fn main() {
     }
 }
 
-// Generate random salts for threads
+// Generate random unique salts for threads
 
 fn get_salts(num: u32) -> Vec<[u8; SALT_LEN]> {
     let mut salts = Vec::with_capacity(num as usize);

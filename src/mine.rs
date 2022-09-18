@@ -8,9 +8,9 @@ use std::sync::mpsc;
 
 use tiny_keccak::{ Hasher, Keccak };
 
-// Mine function selectors with zero byte target
+// Mine function selectors with zero byte target and salt
 
-pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args) {
+pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args, salt: [u8; SALT_LEN]) {
     // Get function byte vector and fill random slots
 
     let mut bytes = get_bytes(&args);
