@@ -15,6 +15,7 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args, s
 
     let mut bytes = get_bytes(&args, &salt);
     let random_slice = (args.name.len() + 1 + SALT_LEN, args.name.len() + 1 + SALT_LEN + RANDOM_LEN);
+    bytes[random_slice.0..random_slice.1].fill(CHAR_RANGE.0);
 
     loop {
         // Increment random slice
