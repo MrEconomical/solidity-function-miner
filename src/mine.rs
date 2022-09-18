@@ -16,7 +16,6 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args, s
     let mut bytes = get_bytes(&args, &salt);
     let rand_start = args.name.len() + 1;
     let random_slice = (rand_start + SALT_LEN, rand_start + SALT_LEN + RANDOM_LEN);
-    bytes[random_slice.0..random_slice.1].clone_from_slice(&get_random(thread_id, args.threads));
 
     loop {
         // Increment random slice
@@ -75,17 +74,4 @@ fn get_bytes(args: &Args, salt: &[u8; SALT_LEN]) -> Vec<u8> {
     bytes[name_len + 1 + SALT_LEN + RANDOM_LEN..].clone_from_slice(args.params.as_bytes());
 
     bytes
-}
-
-// Get random byte slice from thread number to divide load
-
-fn get_random(thread_id: u32, threads: u32) -> Vec<u8> {
-    let mut slice = Vec::with_capacity(RANDOM_LEN);
-    let num_chars = (CHAR_RANGE.1 - CHAR_RANGE.0 + 1) as u64;
-    let state = num_chars.pow(RANDOM_LEN as u32) * thread_id as u64 / threads as u64;
-
-    for b in 0..RANDOM_LEN {
-        slice.push(97 + ((state / num_chars.pow(b as u32)) % num_chars) as u8);
-    }
-    slice
 }
