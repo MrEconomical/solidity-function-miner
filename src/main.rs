@@ -1,9 +1,9 @@
 // Imports
 
-mod config;
+mod args;
 mod mine;
 
-use crate::config::Config;
+use crate::args::Args;
 
 use std::{ env, process, thread };
 use std::sync::mpsc;
@@ -16,7 +16,7 @@ fn main() {
     println!();
     println!("Initializing solidity function miner...");
     println!("Note: running directly from release executable is much faster than running via cargo run");
-    let config = Config::new(env::args()).unwrap_or_else(|error| {
+    let args = Args::new(env::args()).unwrap_or_else(|error| {
         eprintln!("Error parsing arguments: {error}");
         eprintln!("Usage for {}", env::args().next().unwrap());
         eprintln!("    <function name>         Name of Solidity function to mine selectors for");
@@ -28,17 +28,17 @@ fn main() {
     });
     println!(
         "Mining {}{} for {} target zero bytes with {} threads",
-        config.name, config.params, config.target, config.threads
+        args.name, args.params, args.target, args.threads
     );
 
     // Start mining threads
 
     let (sender, receiver) = mpsc::channel();
-    for thread_id in 0..config.threads {
+    for thread_id in 0..args.threads {
         let sender = sender.clone();
-        let config = config.clone();
+        let args = args.clone();
         thread::spawn(move || {
-            mine::mine_selector(thread_id, sender, config);
+            mine::mine_selector(thread_id, sender, args);
         });
     }
 

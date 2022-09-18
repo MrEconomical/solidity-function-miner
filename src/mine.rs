@@ -1,6 +1,6 @@
 // Imports
 
-use crate::config::Config;
+use crate::args::Args;
 
 use std::str;
 use std::sync::mpsc;
@@ -14,12 +14,12 @@ const CHAR_RANGE: (u8, u8) = (97, 122); // Range of random characters (a-z)
 
 // Mine function selectors with zero byte target
 
-pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Config) {
+pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args) {
     // Get function byte vector and fill random slots
 
-    let mut bytes = get_bytes(&config);
-    let random_slice = (config.name.len() + 1, config.name.len() + RANDOM_LENGTH + 1);
-    bytes[random_slice.0..random_slice.1].clone_from_slice(&get_random(thread_id, config.threads));
+    let mut bytes = get_bytes(&args);
+    let random_slice = (args.name.len() + 1, args.name.len() + RANDOM_LENGTH + 1);
+    bytes[random_slice.0..random_slice.1].clone_from_slice(&get_random(thread_id, args.threads));
 
     loop {
         // Increment random slice
@@ -48,7 +48,7 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Confi
             }
         }
 
-        if zero_bytes >= config.target {
+        if zero_bytes >= args.target {
             // Display targeted selector
 
             let message = format!(
@@ -56,7 +56,7 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Confi
                 str::from_utf8(&bytes).unwrap(),
                 hash[0], hash[1], hash[2], hash[3]
             );
-            if zero_bytes > config.target {
+            if zero_bytes > args.target {
                 sender.send(format!("\n    {message}\n")).unwrap();
             } else {
                 sender.send(message).unwrap();
@@ -67,14 +67,14 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, config: Confi
 
 // Convert function name and params to byte vector
 
-fn get_bytes(config: &Config) -> Vec<u8> {
-    let name_len = config.name.len();
-    let bytes = name_len + RANDOM_LENGTH + 1 + config.params.len();
+fn get_bytes(args: &Args) -> Vec<u8> {
+    let name_len = args.name.len();
+    let bytes = name_len + RANDOM_LENGTH + 1 + args.params.len();
     let mut bytes: Vec<u8> = vec![0; bytes];
 
-    bytes[..name_len].clone_from_slice(config.name.as_bytes());
+    bytes[..name_len].clone_from_slice(args.name.as_bytes());
     bytes[name_len] = b'_';
-    bytes[name_len + RANDOM_LENGTH + 1..].clone_from_slice(config.params.as_bytes());
+    bytes[name_len + RANDOM_LENGTH + 1..].clone_from_slice(args.params.as_bytes());
 
     bytes
 }

@@ -1,16 +1,16 @@
-// Mining config parameters
+// Mining config parameters from arguments
 
-pub struct Config {
+pub struct Args {
     pub name: String,
     pub params: String,
     pub target: u32,
     pub threads: u32
 }
 
-impl Config {
+impl Args {
     // Parse command line arguments
 
-    pub fn new(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+    pub fn new(mut args: impl Iterator<Item = String>) -> Result<Args, &'static str> {
         // Get function name
 
         args.next();
@@ -64,7 +64,7 @@ impl Config {
             None => return Err("no thread count specified")
         };
 
-        Ok(Config {
+        Ok(Args {
             name,
             params,
             target,
@@ -73,11 +73,11 @@ impl Config {
     }
 }
 
-impl Clone for Config {
+impl Clone for Args {
     // Clone values into new owned values
 
-    fn clone(&self) -> Config {
-        Config {
+    fn clone(&self) -> Args {
+        Args {
             name: String::from(&self.name),
             params: String::from(&self.params),
             target: self.target,
