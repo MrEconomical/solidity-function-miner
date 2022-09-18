@@ -1,16 +1,12 @@
 // Imports
 
+use crate::config::{ SALT_LEN, RANDOM_LEN, CHAR_RANGE };
 use crate::args::Args;
 
 use std::str;
 use std::sync::mpsc;
 
 use tiny_keccak::{ Hasher, Keccak };
-
-// Mining parameters
-
-const RANDOM_LENGTH: usize = 12;        // Length of random characters in function name
-const CHAR_RANGE: (u8, u8) = (97, 122); // Range of random characters (a-z)
 
 // Mine function selectors with zero byte target
 

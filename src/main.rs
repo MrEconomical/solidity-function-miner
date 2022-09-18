@@ -1,5 +1,6 @@
 // Imports
 
+mod config;
 mod args;
 mod mine;
 
