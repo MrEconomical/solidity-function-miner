@@ -4,10 +4,13 @@ mod config;
 mod args;
 mod mine;
 
+use crate::config::SALT_LEN;
 use crate::args::Args;
 
 use std::{ env, process, thread };
 use std::sync::mpsc;
+
+use rand::distributions::Uniform;
 
 // Run function selector miner
 
@@ -32,9 +35,11 @@ fn main() {
         args.name, args.params, args.target, args.threads
     );
 
-    // Start mining threads
+    // Start mining threads with salts
 
     let (sender, receiver) = mpsc::channel();
+    let salts = get_salts();
+
     for thread_id in 0..args.threads {
         let sender = sender.clone();
         let args = args.clone();
@@ -46,4 +51,10 @@ fn main() {
     for message in receiver {
         println!("{message}");
     }
+}
+
+// Generate random salts for threads
+
+fn get_salts() -> Vec<[u8; SALT_LEN]> {
+    vec![]
 }

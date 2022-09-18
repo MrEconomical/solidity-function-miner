@@ -14,7 +14,7 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args) {
     // Get function byte vector and fill random slots
 
     let mut bytes = get_bytes(&args);
-    let random_slice = (args.name.len() + 1, args.name.len() + RANDOM_LENGTH + 1);
+    let random_slice = (args.name.len() + 1, args.name.len() + RANDOM_LEN + 1);
     bytes[random_slice.0..random_slice.1].clone_from_slice(&get_random(thread_id, args.threads));
 
     loop {
@@ -65,12 +65,12 @@ pub fn mine_selector(thread_id: u32, sender: mpsc::Sender<String>, args: Args) {
 
 fn get_bytes(args: &Args) -> Vec<u8> {
     let name_len = args.name.len();
-    let bytes = name_len + RANDOM_LENGTH + 1 + args.params.len();
+    let bytes = name_len + RANDOM_LEN + 1 + args.params.len();
     let mut bytes: Vec<u8> = vec![0; bytes];
 
     bytes[..name_len].clone_from_slice(args.name.as_bytes());
     bytes[name_len] = b'_';
-    bytes[name_len + RANDOM_LENGTH + 1..].clone_from_slice(args.params.as_bytes());
+    bytes[name_len + RANDOM_LEN + 1..].clone_from_slice(args.params.as_bytes());
 
     bytes
 }
@@ -78,11 +78,11 @@ fn get_bytes(args: &Args) -> Vec<u8> {
 // Get random byte slice from thread number to divide load
 
 fn get_random(thread_id: u32, threads: u32) -> Vec<u8> {
-    let mut slice = Vec::with_capacity(RANDOM_LENGTH);
+    let mut slice = Vec::with_capacity(RANDOM_LEN);
     let num_chars = (CHAR_RANGE.1 - CHAR_RANGE.0 + 1) as u64;
-    let state = num_chars.pow(RANDOM_LENGTH as u32) * thread_id as u64 / threads as u64;
+    let state = num_chars.pow(RANDOM_LEN as u32) * thread_id as u64 / threads as u64;
 
-    for b in 0..RANDOM_LENGTH {
+    for b in 0..RANDOM_LEN {
         slice.push(97 + ((state / num_chars.pow(b as u32)) % num_chars) as u8);
     }
     slice
